@@ -1,6 +1,6 @@
 {
-    "name": "JSON",
-    "id": "simpod-json-datasource",
+    "name": "JSON Extended",
+    "id": "simpod-json-datasource-ext",
     "type": "datasource",
     "partials": {
         "config": "partials/config.html"
@@ -19,11 +19,11 @@
         "links": [
             {
                 "name": "GitHub",
-                "url": "https://github.com/simPod/grafana-json-datasource"
+                "url": "https://github.com/Valtaroth/grafana-json-datasource"
             },
             {
                 "name": "MIT License",
-                "url": "https://github.com/simPod/grafana-json-datasource/blob/master/LICENSE"
+                "url": "https://github.com/Valtaroth/grafana-json-datasource/blob/master/LICENSE"
             }
         ],
         "version": "%VERSION%",
