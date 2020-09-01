@@ -34,6 +34,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
     onChange({ ...query, data: data, target: metric.value, type: formatAs.value });
 
     onRunQuery();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, formatAs, metric]);
 
   const loadMetrics = (searchQuery: string) => {
