@@ -19,11 +19,6 @@ export const ConfigEditor: ComponentType<Props> = ({ options, onOptionsChange })
     [options]
   );
 
-  const depthTooltip = (
-    <>
-      The selection depth of the query targets used to build the query interface.
-    </>
-  );
   const depthInput = (
     <Input
       className={'width-20'}
@@ -44,11 +39,23 @@ export const ConfigEditor: ComponentType<Props> = ({ options, onOptionsChange })
         onChange={onOptionsChange}
       />
       <div className="gf-form-group">
-        <h3 className="page-heading">JSON</h3>
+        <h3 className="page-heading">Extension</h3>
         <div className="gf-form-group">
           <div className="gf-form">
-            <LegacyForms.FormField label="Selection Depth" labelWidth={11} tooltip={depthTooltip} inputEl={depthInput} />
+            <LegacyForms.FormField
+              label="Selection Depth"
+              labelWidth={11}
+              tooltip="The selection depth of the query targets used to build the query interface."
+              inputEl={depthInput}
+            />
           </div>
+          <LegacyForms.Switch
+            label="Search Compatibility"
+            labelClass="width-11"
+            tooltip="When enabled, metric searches will be directed to /detailedsearch instead of /search to allow compatibility with the base plugin from within the same service."
+            checked={options.jsonData.searchCompatibility ?? false}
+            onChange={event => onJsonDataChange({ searchCompatibility: event!.currentTarget.checked })}
+          />
         </div>
       </div>
     </>

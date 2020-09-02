@@ -23,6 +23,7 @@ export interface GrafanaQuery extends DataQuery {
 
 export interface GenericOptions extends DataSourceJsonData {
   selectionDepth?: number;
+  searchCompatibility?: boolean;
 }
 
 export interface MetricFindValue extends MetricFindValue {

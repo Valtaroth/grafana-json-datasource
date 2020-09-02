@@ -21,6 +21,7 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
   withCredentials: boolean;
   headers: any;
   selectionDepth: number;
+  searchCompatibility: boolean;
 
   constructor(instanceSettings: DataSourceInstanceSettings<GenericOptions>) {
     super(instanceSettings);
@@ -34,6 +35,7 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
     }
 
     this.selectionDepth = instanceSettings.jsonData.selectionDepth ?? 1;
+    this.searchCompatibility = instanceSettings.jsonData.searchCompatibility ?? false;
   }
 
   query(options: QueryRequest): Promise<DataQueryResponse> {
@@ -79,7 +81,7 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
     };
 
     return this.doRequest({
-      url: `${this.url}/search`,
+      url: `${this.url}/${this.searchCompatibility ? 'detailedsearch' : 'search'}`,
       data: interpolated,
       method: 'POST',
     }).then(this.mapToTextValue);
