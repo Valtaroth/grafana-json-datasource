@@ -1,6 +1,5 @@
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { CodeEditor, Label, Select } from '@grafana/ui';
-import { find } from 'lodash';
 
 import React, { ComponentType } from 'react';
 import { DataSource } from './DataSource';
@@ -22,7 +21,7 @@ const formatAsOptions = [
 
 export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQuery, query }) => {
   const [formatAs, setFormatAs] = React.useState<SelectableValue<Format>>(
-    find(formatAsOptions, option => option.value === query.type) ?? formatAsOptions[0]
+    formatAsOptions.find(option => option.value === query.type) ?? formatAsOptions[0]
   );
   const [options, setOptions] = React.useState<object>([]);
   const [selection, setSelection] = React.useState<MetricSelection[]>();
@@ -77,7 +76,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
       
       let target = currentMetric[i].value;
 
-      let element: any = find(newOptions, (option: any) => option.value === target);
+      let element: any = newOptions.find(option => option.value === target);
       if (element === undefined) {
         if (target !== undefined && i < resetIndex) {
           element = { label: target, value: target };
