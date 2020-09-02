@@ -20,17 +20,20 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
   url: string;
   withCredentials: boolean;
   headers: any;
+  selectionDepth: number;
 
   constructor(instanceSettings: DataSourceInstanceSettings<GenericOptions>) {
     super(instanceSettings);
 
     this.url = instanceSettings.url === undefined ? '' : instanceSettings.url;
-
+    
     this.withCredentials = instanceSettings.withCredentials !== undefined;
     this.headers = { 'Content-Type': 'application/json' };
     if (typeof instanceSettings.basicAuth === 'string' && instanceSettings.basicAuth.length > 0) {
       this.headers['Authorization'] = instanceSettings.basicAuth;
     }
+
+    this.selectionDepth = instanceSettings.jsonData.selectionDepth ?? 1;
   }
 
   query(options: QueryRequest): Promise<DataQueryResponse> {
@@ -134,7 +137,7 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
   }
 
   mapToTextValue(result: any) {
-    return result.data.map((d: any, i: any) => {
+    return !Array.isArray(result.data) ? result.data : result.data.map((d: any, i: any) => {
       if (d && d.text && d.value) {
         return { text: d.text, value: d.value };
       }
@@ -170,6 +173,9 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
           });
         }
 
+        if (Array.isArray(target.target)) {
+          target.target = target.target.join('');
+        }
         if (typeof target.target === 'string') {
           target.target = getTemplateSrv().replace(target.target.toString(), options.scopedVars, 'regex');
         }

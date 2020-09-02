@@ -8,7 +8,7 @@ declare module '@grafana/runtime' {
   }
 }
 
-export interface DataSourceOptions extends DataSourceJsonData {}
+export interface DataSourceOptions extends GenericOptions {}
 
 export interface QueryRequest extends DataQueryRequest<GrafanaQuery> {
   adhocFilters?: any[];
@@ -16,12 +16,14 @@ export interface QueryRequest extends DataQueryRequest<GrafanaQuery> {
 
 export interface GrafanaQuery extends DataQuery {
   alias?: string;
-  target?: string;
+  target?: string | string[];
   data: string;
   type: Format;
 }
 
-export interface GenericOptions extends DataSourceJsonData {}
+export interface GenericOptions extends DataSourceJsonData {
+  selectionDepth?: number;
+}
 
 export interface MetricFindValue extends MetricFindValue {
   value: any;
