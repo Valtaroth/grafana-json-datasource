@@ -31,7 +31,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
     if (!selection) {
       return '';
     }
-    return selection.length > 1 ? selection.map(sel => sel ? sel.metric.value ?? '' : '') : selection[0].metric.value ?? '';
+    return selection.length > 1 ? selection.map(sel => sel && sel.metric ? sel.metric.value ?? '' : '') : (selection[0].metric ? selection[0].metric.value ?? '' : '');
   }
 
   React.useEffect(() => {
@@ -64,7 +64,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
         newSelection[i].options = [ newSelection[i].metric ];
         continue;
       }
-      
+
       let newOptions = [];
       if (Array.isArray(obj)) {
         newOptions = i === 0 ? obj : obj.map(element => ({ text: element, value: element }));
@@ -73,12 +73,12 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
         newOptions = Object.keys(obj).map(key => ({ text: key, value: key }));
       }
       newOptions = newOptions.map((value: any) => ({ label: value.text, value: value.value }));
-      
-      let target = currentMetric[i].value;
-      let element: any = newOptions.find(option => option.value === target);
 
-      if (element === undefined) {
-        if (target !== undefined && i < resetIndex) {
+      let target = currentMetric && currentMetric.length > i && currentMetric[i] !== undefined ? currentMetric[i] : undefined;
+      let element: any = target ? newOptions.find(option => option.value === target) : undefined;
+
+      if (element === undefined && target !== undefined) {
+        if (i < resetIndex) {
           element = { label: target, value: target };
           newOptions.push(element);
         }
@@ -89,7 +89,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
 
       newSelection[i].options = newOptions;
       newSelection[i].metric = element;
-      
+
       if (!Array.isArray(obj)) {
         obj = element !== undefined ? obj[element.value] : undefined;
       }
@@ -101,7 +101,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
   const loadMetrics = async (searchQuery: string) => {
     return datasource.metricFindQuery(searchQuery).then(
       result => {
-        updateActiveOptions(result, [], Array.isArray(query.target) ? query.target : [ { value: query.target } ], 0);
+        updateActiveOptions(result, [], (Array.isArray(query.target)) ? query.target : [ query.target ], 0);
         setOptions(result);
       },
       response => {
@@ -122,8 +122,8 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
     if (!selection) {
       return;
     }
-    let changedMetric = selection.map(sel => sel.metric);
-    changedMetric[index] = value;
+    let changedMetric = selection.map(sel => sel && sel.metric ? sel.metric.value : undefined);
+    changedMetric[index] = value.value;
     updateActiveOptions(options, selection, changedMetric, index + 1);
   }
 
