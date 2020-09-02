@@ -75,8 +75,8 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
       newOptions = newOptions.map((value: any) => ({ label: value.text, value: value.value }));
       
       let target = currentMetric[i].value;
-
       let element: any = newOptions.find(option => option.value === target);
+
       if (element === undefined) {
         if (target !== undefined && i < resetIndex) {
           element = { label: target, value: target };
@@ -101,7 +101,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
   const loadMetrics = async (searchQuery: string) => {
     return datasource.metricFindQuery(searchQuery).then(
       result => {
-        updateActiveOptions(result, [], Array.isArray(query.target) ? query.target : [ query.target ], 0);
+        updateActiveOptions(result, [], Array.isArray(query.target) ? query.target : [ { value: query.target } ], 0);
         setOptions(result);
       },
       response => {
