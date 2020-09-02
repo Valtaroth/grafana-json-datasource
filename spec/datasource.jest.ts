@@ -40,8 +40,15 @@ const options = {
   },
 };
 
+const configuration = {
+  jsonData: {
+    selectionDepth: 1,
+    searchCompatibility: false
+  }
+}
+
 describe('GenericDatasource', () => {
-  const ds = new DataSource({} as any);
+  const ds = new DataSource(configuration as any);
 
   it('should return an empty array when no targets are set', done => {
     ds.query({ ...options, targets: [] }).then(result => {
@@ -288,7 +295,7 @@ describe('GenericDatasource.prototype.buildQueryTargets', () => {
     setTemplateSrv(templateSrvStub);
   });
 
-  const ds = new DataSource({} as any);
+  const ds = new DataSource(configuration as any);
 
   it('simple key-value', () => {
     const testcase: QueryRequest = {

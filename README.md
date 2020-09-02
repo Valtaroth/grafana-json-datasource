@@ -14,6 +14,7 @@ _JSON Datasource is built on top of the [Simple JSON Datasource](https://github.
   - [/tag-keys](#tag-keys)
   - [/tag-values](#tag-values)
 - [Development Setup](#development-setup)
+- [Extensions](#extensions)
 
 ## Installation
 
@@ -80,6 +81,8 @@ Example map response:
 ```json
 [ { "text": "upper_25", "value": 1}, { "text": "upper_75", "value": 2} ]
 ```
+
+> Make sure to read up on the changes made to this request outlined below in [Extensions](#extensions).
 
 ### /query
 
@@ -298,3 +301,44 @@ This plugin requires node 6.10.0. Use of [Yarn](https://yarnpkg.com/lang/en/docs
 yarn install
 yarn run build
 ```
+
+## Extensions
+
+To better deal with large quantities of options, this plugin was extended to accept an additional format when fetching search data.
+
+The data source configuration now contains the depth of the expected Json object. The following example assumes a configured depth of 3:
+
+```json
+{
+  "host-1": {
+    "disk": [
+      "dev-0",
+      "dev-1",
+      "dev-2"
+    ],
+    "memory": [
+      "ram",
+      "swap"
+    ]
+  },
+  "host-2": {
+    "disk": [
+      "C:",
+      "D:"
+    ],
+    "cpu": [
+      "load1",
+      "load5",
+      "load15"
+    ]
+  }
+}
+```
+
+The expected response needs to contain several levels of Json objects, with the keys being the selectable labels, with the final level being an array. The plugin will create a selection box for each level and fill it with the corresponding data based on the previous box's selection.
+
+For a configured depth of 1 the plugin accepts the responses specified in [/search](#search) above.
+
+To allow serving this extended plugin as well as the original one, the plugin offers a compatibility mode switch in the data source configuration, which routes all search requests to `/detailedsearch` instead of `/search`. The targeted service can then serve both endpoints with different responses. By default, `/search` is used like in the original plugin.
+
+For one-dimensional data sources the original plugin is recommended as its search performance is better for large quantities of options due to it actively filtering out options as the user refines their search.
